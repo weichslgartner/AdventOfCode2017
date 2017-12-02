@@ -1,4 +1,4 @@
-package main
+package util
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ func check(e error) {
 	}
 }
 
-func readFileToString(filename string) string {
+func ReadFileToString(filename string) string {
 	file, err := ioutil.ReadFile(filename)
 	check(err)
 	str := string(file)

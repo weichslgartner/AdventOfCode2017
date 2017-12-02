@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"util"
 )
 
 func sumIdenticalDigits(fileStr string) int {
@@ -31,7 +32,7 @@ func halfWay(fileStr string) int {
 }
 
 func main() {
-	fileStr := readFileToString("inputs/day1.txt")
+	fileStr := util.ReadFileToString("inputs/day1.txt")
 
 	sum := sumIdenticalDigits(fileStr)
 	fmt.Printf("Part1 :%v\n", sum)
