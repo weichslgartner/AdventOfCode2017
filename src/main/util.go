@@ -21,7 +21,7 @@ func check(e error) {
 
 
 
-func read_file_to_string(filename string) string{
+func readFileToString(filename string) string{
 	file, err := ioutil.ReadFile(filename)
 	check(err)
 	str := string(file)
