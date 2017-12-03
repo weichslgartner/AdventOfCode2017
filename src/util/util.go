@@ -9,7 +9,6 @@ import (
 	"io/ioutil"
 )
 
-var print = fmt.Println
 
 func check(e error) {
 	if e != nil {
@@ -22,6 +21,14 @@ func ReadFileToString(filename string) string {
 	check(err)
 	str := string(file)
 	return str
+}
+
+func Abs(number int) int {
+	if number < 0{
+		return -1*number
+	}else{
+		return number
+	}
 }
 
 func readFileLine(filename string) []int {
