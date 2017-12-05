@@ -29,6 +29,7 @@ func Abs(number int) int {
 
 func ReadFileLines(filename string)[]string {
 	fileStr := ReadFileToString(filename)
-	lines := strings.Split(fileStr,"\n")
+	lines := strings.Split(fileStr,"\r\n")
+
 	return lines
 }
