@@ -5,40 +5,36 @@ import (
 	"fmt"
 )
 
-
-
-func findCycles(numbers []int) (int, int) {
+func findCycles(memBanks []int) (int, int) {
 	seenAllocations := make(map[string]int)
-	cycleLength := 0
+	steps := 0
 	firstCycle := 0
-	for isInMap(seenAllocations, util.IntListToString(numbers)) == false || seenAllocations[util.IntListToString(numbers)] < 2 {
-		if isInMap(seenAllocations, util.IntListToString(numbers)) && firstCycle == 0 {
-			firstCycle = cycleLength
+	for isInMap(seenAllocations, util.IntListToString(memBanks)) == false || seenAllocations[util.IntListToString(memBanks)] < 2 {
+		if isInMap(seenAllocations, util.IntListToString(memBanks)) && firstCycle == 0 {
+			firstCycle = steps
 		}
-
-		seenAllocations[util.IntListToString(numbers)] += 1
-		argMax, max := util.ArgMax(numbers)
-		numbers[argMax] = 0
-		currentBank := (argMax + 1) % (len(numbers))
+		seenAllocations[util.IntListToString(memBanks)] += 1
+		argMax, max := util.ArgMax(memBanks)
+		memBanks[argMax] = 0
+		currentBank := (argMax + 1) % (len(memBanks))
 		for i := max; i > 0; i-- {
-			numbers[currentBank] += 1
-			currentBank = (currentBank + 1) % (len(numbers))
+			memBanks[currentBank] += 1
+			currentBank = (currentBank + 1) % (len(memBanks))
 		}
 
-		cycleLength++
+		steps++
 	}
-	return cycleLength, firstCycle
+	return steps, firstCycle
 }
 func isInMap(seenAllocations map[string]int, signature string) bool {
 	_, exists := seenAllocations[signature]
 	return exists
 }
 
-
 func main() {
-	numbers := util.ReadNumbersFromFile("inputs/day6.txt")
-	fmt.Println(numbers)
-	secondCycle, firstCycle := findCycles(numbers)
+	memBanks := util.ReadNumbersFromFile("inputs/day6.txt")
+	fmt.Println(memBanks)
+	secondCycle, firstCycle := findCycles(memBanks)
 
 	fmt.Println(firstCycle)
 	fmt.Println(secondCycle - firstCycle)
