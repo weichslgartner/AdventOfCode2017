@@ -9,8 +9,8 @@ func findCycles(memBanks []int) (int, int) {
 	seenAllocations := make(map[string]int)
 	steps := 0
 	firstCycle := 0
-	for isInMap(seenAllocations, util.IntListToString(memBanks)) == false || seenAllocations[util.IntListToString(memBanks)] < 2 {
-		if isInMap(seenAllocations, util.IntListToString(memBanks)) && firstCycle == 0 {
+	for seenAllocations[util.IntListToString(memBanks)] < 2 {
+		if seenAllocations[util.IntListToString(memBanks)] ==1 && firstCycle == 0 {
 			firstCycle = steps
 		}
 		seenAllocations[util.IntListToString(memBanks)] += 1
@@ -26,10 +26,7 @@ func findCycles(memBanks []int) (int, int) {
 	}
 	return steps, firstCycle
 }
-func isInMap(seenAllocations map[string]int, signature string) bool {
-	_, exists := seenAllocations[signature]
-	return exists
-}
+
 
 func main() {
 	memBanks := util.ReadNumbersFromFile("inputs/day6.txt")
