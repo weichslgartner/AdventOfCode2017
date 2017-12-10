@@ -13,8 +13,6 @@ func getScore(input string) (int,int) {
 	currentCharPos := 0
 	for currentCharPos < len(input){
 		currentChar := string(input[currentCharPos])
-		//println(currentChar)
-
 		switch currentChar {
 		case "!":
 			currentCharPos+=2
