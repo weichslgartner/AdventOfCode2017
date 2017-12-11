@@ -21,6 +21,14 @@ func ReadFileToString(filename string) string {
 	return str
 }
 
+func Max(a int, b int) int {
+	if a > b{
+		return a
+	}else{
+		return b
+	}
+}
+
 func Abs(number int) int {
 	if number < 0{
 		return -1*number
