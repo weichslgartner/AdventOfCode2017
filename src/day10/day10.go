@@ -46,6 +46,7 @@ func generateList(length int) []int{
 	}
 	return intList
 }
+
 func getInputLengths(filename string) []int {
 	file, _ := ioutil.ReadFile(filename)
 	lengths := append(file, 17, 31, 73, 47, 23)

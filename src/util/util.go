@@ -47,11 +47,16 @@ func ReadFileLines(filename string)[]string {
 
 func ReadNumbersFromFile(filename string)[]int {
 	fileStr := ReadFileToString(filename)
-	strNumbers := regexp.MustCompile("[0-9]+").FindAllString(fileStr,-1)
+	numbers := ExtractAllNumbers(fileStr)
+	return numbers
+}
+
+func ExtractAllNumbers(fileStr string) []int {
+	strNumbers := regexp.MustCompile("[0-9]+").FindAllString(fileStr, -1)
 	//strNumbers := strings.Split(fileStr," ")
-	numbers := make([]int,len(strNumbers))
-	for i,strNumber := range strNumbers{
-		numbers[i],_= strconv.Atoi(strNumber)
+	numbers := make([]int, len(strNumbers))
+	for i, strNumber := range strNumbers {
+		numbers[i], _ = strconv.Atoi(strNumber)
 	}
 	return numbers
 }

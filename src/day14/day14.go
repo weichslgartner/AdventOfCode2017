@@ -8,6 +8,9 @@ import (
 
 const FREE = 0
 const OCCUPIED = -1
+const WIDTH = 128
+const HEIGHT = 128
+
 
 var diskArray [][]int
 
@@ -71,13 +74,13 @@ func searchRegion(y int, x int, regionNumber int) {
 	if y > 0 && diskArray [y-1][x] == OCCUPIED {
 		searchRegion(y-1, x, regionNumber)
 	}
-	if y < 128-1 && diskArray [y+1][x] == OCCUPIED {
+	if y < HEIGHT-1 && diskArray [y+1][x] == OCCUPIED {
 		searchRegion(y+1, x, regionNumber)
 	}
 	if x > 0 && diskArray [y][x-1] == OCCUPIED {
 		searchRegion(y, x-1, regionNumber)
 	}
-	if x < 128-1 && diskArray [y][x+1] == OCCUPIED {
+	if x < WIDTH-1 && diskArray [y][x+1] == OCCUPIED {
 		searchRegion(y, x+1, regionNumber)
 	}
 
@@ -87,7 +90,7 @@ func searchRegion(y int, x int, regionNumber int) {
 func main() {
 	numberOnes := 0
 	input := "ljoxqyyw" //"flqrgnkx"//
-	diskArray = make([][]int, 128)
+	diskArray = make([][]int, HEIGHT)
 
 	for i := 0; i < 128; i++ {
 		hashInput := input + "-" + strconv.Itoa(i)
