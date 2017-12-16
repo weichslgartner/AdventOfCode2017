@@ -10,18 +10,21 @@ import (
 
 func main() {
 	//input := "s1,x3/4,pe/b"
-	input := util.ReadFileToString("inputs/day16_optimized.txt")
+	input := util.ReadFileToString("inputs/day16.txt")
 	commands := strings.Split(input,",")
 	programs := "abcdefghijklmnop" //"abcde"//
 	optimize := false
 	//programs := "abcde"//
 	resultMap := make(map[string]int)
-	programList := generateProgramList(programs)
-	for i:= 0; i <100000;i++{
+	//programList := generateProgramList(programs)
+	i:=0
+	iterations := 100
+	cycledetection := true
+	for ; i <iterations;{
 
 
 		if (optimize){
-			commands = doTheDance(commands, &programList,false)
+			commands = doTheDance(commands, &programs,false)
 			if(i==2){
 				f, _ := os.Create("inputs/day16_optimized.txt")
 				w := bufio.NewWriter(f)
@@ -30,21 +33,30 @@ func main() {
 
 			}
 		}else{
-			doTheDance(commands, &programList,false)
+			doTheDance(commands, &programs,false)
 			//fmt.Println(strings.Join(programList, ""))
 		}
-		newString := strings.Join(programList, "")
-		entry, exists := resultMap[newString]
-		if exists {
+	//	newString := strings.Join(programList, "")
+		entry, exists := resultMap[programs]
+		if exists  && cycledetection{
 			fmt.Printf("skip %v - %v \n", entry, i,)
-			resultMap[newString] = i
+			resultMap[programs] = i
+			//forward
+			resultMap = make(map[string]int)
+			i=iterations- (iterations %(i-entry))+1
+			fmt.Println(i)
+		}else{
+			resultMap[programs] = i
+			i+=1
 		}
+
+
 		if(i%1000 == 0){
 			fmt.Printf("i: %v, length: %v \n", i, len(resultMap))
 		}
 	}
 	fmt.Println()
-	fmt.Println(strings.Join(programList, ""))
+	fmt.Println(programs)
 }
 
 func isInvariantCycle(commands []string) bool{
@@ -58,7 +70,7 @@ func isInvariantCycle(commands []string) bool{
 	return isInvariant
 }
 
-func doTheDance(commands []string, programList *[]string,profile bool) []string{
+func doTheDance(commands []string, programList *string,profile bool) []string{
 	resultMap := make(map[string]int)
 	commandList := make([]string,0)
 	newCommands :=  make([]string,0)
@@ -80,8 +92,8 @@ func doTheDance(commands []string, programList *[]string,profile bool) []string{
 		}
 
 		if profile{
-			newString :=strings.Join(*programList, "")
-			entry, exists := resultMap[newString]
+			//newString :=strings.Join(*programList, "")
+			entry, exists := resultMap[*programList]
 			if exists && isInvariantCycle(commandList[entry:i+1]){
 
 			//	fmt.Printf("skip %v - %v: %v \n", entry, i, commandList[entry:i+1])
@@ -90,7 +102,7 @@ func doTheDance(commands []string, programList *[]string,profile bool) []string{
 				lastIndex =i+1
 				//commands = append(commands[:entry], commands[entry+i:]...)
 			}
-			resultMap[newString] = i
+			resultMap[*programList] = i
 		}
 	//	fmt.Println(strings.Join(*programList, ""))
 	}
@@ -104,13 +116,13 @@ func doTheDance(commands []string, programList *[]string,profile bool) []string{
 
 }
 
-func swapByName(programList *[]string, s string, s2 string){
+func swapByName(programList *string, s string, s2 string){
 	positionA, positionB := -1, -1
 	for i,str := range *programList{
-		if str == s{
+		if string(str) == s{
 			positionA = i
 		}
-		if str == s2{
+		if string(str) == s2{
 			positionB = i
 		}
 		if positionA != -1 && positionB != -1{
@@ -131,12 +143,19 @@ func generateProgramList(s string) []string {
 	}
 	return result
 }
-func swapByPosition(s *[]string, i int, i2 int) {
-	(*s)[i] , (*s)[i2] = (*s)[i2] , (*s)[i]
+func swapByPosition(s *string, i int, i2 int) {
+	a := (*s)[i]
+	b := (*s)[i2]
+	replaceLetter(s,i,string(b))
+	replaceLetter(s,i2,string(a))
 
 }
 
-func spin(s *[]string, numbers int){
+func replaceLetter(s *string, position int, letter string){
+	*s = (*s)[:position] + letter + (*s)[position+1:]
+}
+
+func spin(s *string, numbers int){
 	spin := numbers % len(*s)
-	*s = append((*s)[len(*s)-spin:len(*s)],(*s)[0:len(*s)-spin]...)
+	*s = (*s)[len(*s)-spin:len(*s)] + (*s)[0:len(*s)-spin]
 }
