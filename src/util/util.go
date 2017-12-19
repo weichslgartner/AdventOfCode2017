@@ -119,6 +119,10 @@ func doTheHash(list []int, inputLengths []int, numberRounds int){
 
 }
 
+func IsNumber(s string) bool {
+	strNumbers := regexp.MustCompile("[0-9]+").FindAllString(s, -1)
+	return len(strNumbers) == 1
+}
 
 func convertToDenseHash(list []int) []int{
 	denseHash := make([]int,len(list)/16)
