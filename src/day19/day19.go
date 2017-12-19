@@ -27,11 +27,7 @@
 			visited[currentPos] = true
 			switch currentChar {
 			case "|":
-				currentPos.x += xdir
-				currentPos.y += ydir
 			case "-":
-				currentPos.x += xdir
-				currentPos.y += ydir
 			case "+":
 				var next coord
 				Loop:
@@ -47,17 +43,16 @@
 						if visited[next] == false && array[next.y][next.x] != " " && array[next.y][next.x] != ""  {
 							xdir = x
 							ydir = y
-							currentPos = next
 							break Loop
 						}
 					}
 				}
 			default:
 				solution += currentChar
-				currentPos.x += xdir
-				currentPos.y += ydir
-				fmt.Println(solution)
+				//fmt.Println(solution)
 			}
+			currentPos.x += xdir
+			currentPos.y += ydir
 			numbersteps++
 			//fmt.Println(currentPos , currentChar)
 		}
