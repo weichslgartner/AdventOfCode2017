@@ -53,7 +53,7 @@ func ReadNumbersFromFile(filename string)[]int {
 }
 
 func ExtractAllNumbers(fileStr string) []int {
-	strNumbers := regexp.MustCompile("[0-9]+").FindAllString(fileStr, -1)
+	strNumbers := regexp.MustCompile("-?[0-9]+").FindAllString(fileStr, -1)
 	//strNumbers := strings.Split(fileStr," ")
 	numbers := make([]int, len(strNumbers))
 	for i, strNumber := range strNumbers {
