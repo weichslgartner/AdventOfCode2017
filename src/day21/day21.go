@@ -23,7 +23,7 @@ const (
 
 var concurrent bool = false
 
-type Pattern [][]string
+type Pattern [][]bool
 var waitGroup sync.WaitGroup
 
 func main() {
@@ -31,7 +31,7 @@ func main() {
 	patternMap := parsePatternMap(lines)
 	patternMapWithRotations := make(map[string]Pattern)
 	iterations := 18
-	transformToPAtternMapWithRotations(patternMap, patternMapWithRotations)
+	transformToPatternMapWithRotations(patternMap, patternMapWithRotations)
 	currentPattern := line2Pattern([]string{".#.", "..#", "###"})
 	for i := 1; i <= iterations; i++ {
 		start := time.Now()
@@ -78,16 +78,16 @@ func determineStepAndInitNewPattern(currentPattern Pattern, ) (int, Pattern) {
 	var newPattern Pattern
 	if len(currentPattern)%2 == 0 {
 		stepSize = 2
-		newPattern = make([][]string, (len(currentPattern)/2)*3)
+		newPattern = make([][]bool, (len(currentPattern)/2)*3)
 	} else if len(currentPattern)%3 == 0 {
 		stepSize = 3
-		newPattern = make([][]string, (len(currentPattern)/3)*4)
+		newPattern = make([][]bool, (len(currentPattern)/3)*4)
 	} else {
 		fmt.Println("Wrong Patternsize")
 		return 0, nil
 	}
 	for y := 0; y < len(newPattern); y++ {
-		newPattern[y] = make([]string, len(newPattern))
+		newPattern[y] = make([]bool, len(newPattern))
 	}
 	return stepSize, newPattern
 }
@@ -110,13 +110,13 @@ func matchPattern(patternMapWithRotations map[string]Pattern, stepSize int, subP
 
 
 
-func transformToPAtternMapWithRotations(patternMap map[string]Pattern, patternMapWithRotations map[string]Pattern) {
+func transformToPatternMapWithRotations(patternMap map[string]Pattern, patternMapWithRotations map[string]Pattern) {
 	for in, out := range patternMap {
 		inNew := string2Pattern(in)
 		var rot_input Pattern
-		rot_input = make([][]string, len(inNew))
+		rot_input = make([][]bool, len(inNew))
 		for i := 0; i < len(inNew); i++ {
-			rot_input[i] = make([]string, len(inNew))
+			rot_input[i] = make([]bool, len(inNew))
 		}
 		for rot := _0; rot <= _270FLIPX; rot++ {
 
@@ -200,8 +200,9 @@ func rotate(pattern Pattern, rot int) Pattern {
 	}
 	return pattern
 }
+
 func cutOutPattern(pattern Pattern, y int, x int, step int) Pattern {
-	subPattern := make([][]string, step)
+	subPattern := make([][]bool, step)
 	for i := 0; i < step; i++ {
 		subPattern[i] = pattern[y+i][x:x+step]
 	}
@@ -226,8 +227,8 @@ func match(subPattern Pattern, inPattern Pattern) bool {
 func numberOn(pattern Pattern) int {
 	numberOn := 0
 	for _, line := range pattern {
-		for _, char := range line {
-			if char == "#" {
+		for _, element := range line {
+			if element{
 				numberOn++
 			}
 		}
@@ -237,7 +238,14 @@ func numberOn(pattern Pattern) int {
 
 func printPattern(pattern Pattern) {
 	for _, line := range pattern {
-		fmt.Println(strings.Join(line, ""))
+		for _, element := range line{
+			if element {
+				fmt.Println("#")
+			}else{
+				fmt.Println(".")
+			}
+		}
+
 
 	}
 	fmt.Println()
@@ -248,17 +256,17 @@ func parsePatternMap(lines []string) map[string]Pattern {
 	for _, line := range lines {
 		line := strings.Replace(line, " ", "", -1)
 		patternz := strings.Split(line, "=>")
-		var inputPatterm, outputPattern Pattern
+		var inputPattern, outputPattern Pattern
 		for i, p := range patternz {
 			p_lines := strings.Split(p, "/")
 			if i == 0 {
-				inputPatterm = line2Pattern(p_lines)
+				inputPattern = line2Pattern(p_lines)
 			} else {
 				outputPattern = line2Pattern(p_lines)
 			}
 
 		}
-		patternMap[pattern2String(inputPatterm)] = outputPattern
+		patternMap[pattern2String(inputPattern)] = outputPattern
 	}
 	return patternMap
 }
@@ -268,25 +276,40 @@ func string2Pattern(s string) Pattern {
 	if len(s)%3 == 0 {
 		width = 3
 	}
-	lines := make([][]string, width)
+	lines := make([]string, width)
 	for i := 0; i < len(s); i += width {
-		lines[i/width] = strings.Split(s[i:i+width], "")
+		lines[i/width] = s[i:i+width]
 	}
-	return lines
+	return line2Pattern(lines)
 }
 
 func line2Pattern(p_lines []string) Pattern {
-	pattern := make([][]string, len(p_lines[0]))
-	for j, p_line := range p_lines {
-		pattern[j] = strings.Split(p_line, "")
+	pattern := make([][]bool, len(p_lines[0]))
+	for i,_ := range pattern{
+		pattern[i] = make([]bool, len(p_lines[0]))
+	}
+	for y, p_line := range p_lines {
+		chars :=  strings.Split(p_line, "")
+		for x, char := range chars{
+			pattern[y][x] = string(char) == "#"
+		}
+
 	}
 	return pattern
 }
 
 func pattern2String(pattern Pattern) string {
 	result := ""
-	for _, s := range pattern {
-		result += strings.Join(s, "")
+	for _, line := range pattern {
+		for _, element := range line{
+			if element{
+				result += "#"
+			}else{
+				result += "."
+			}
+
+		}
+
 	}
 	return result
 }
