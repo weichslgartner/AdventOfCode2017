@@ -11,7 +11,12 @@
 		y int
 	}
 
-
+	func main() {
+		lines := util.ReadFileLines("inputs/day19.txt")
+		array, currentPos, ymax, xmax := createGrid(lines)
+		solution, numbersteps := doTheWalk(currentPos, ymax, xmax, array)
+		fmt.Println(solution, numbersteps)
+	}
 
 	func doTheWalk(currentPos coord, ymax int, xmax int, array [][]string) (string, int) {
 		xdir := 0
@@ -76,12 +81,4 @@
 			}
 		}
 		return grid, currentPos, ymax, xmax
-	}
-
-
-	func main() {
-		lines := util.ReadFileLines("inputs/day19.txt")
-		array, currentPos, ymax, xmax := createGrid(lines)
-		solution, numbersteps := doTheWalk(currentPos, ymax, xmax, array)
-		fmt.Println(solution, numbersteps)
 	}

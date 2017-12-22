@@ -58,7 +58,7 @@ func simulate(particleList []particle, particleMap map[int]int, part1 bool) part
 			newManhattan := manhattanDistance(part.position)
 			if newManhattan < manhattan {
 				converge = false
-			} 
+			}
 			particleList[i] = part
 			particleMap[i] = newManhattan
 			if newManhattan < nearestDistance {
