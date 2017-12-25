@@ -29,27 +29,7 @@ func cell2String(c cell) string{
 }
 
 
-func main() {
-	lines := util.ReadFileLines("inputs/day22.txt")
-	minY := 0
-	minX := 0
 
-	grid ,maxY, maxX:=  parseGrid(lines)
-
-	currentX := (maxX - minX)/2
-	currentY := (maxY - minY)/2
-	dirX := 0
-	dirY := -1
-	maxBursts := 10000
-
-	numberInfected := part1(grid, currentX, currentY, dirX, dirY, maxBursts)
-	fmt.Println("Part 1: ", numberInfected)
-
-
-	maxBursts = 10000000
-	numberInfected = part2(grid, currentX, currentY, dirX, dirY, maxBursts)
-	fmt.Println("Part 2: ", numberInfected)
-}
 
 
 func part1(grid map[string]cell, currentX int, currentY int, dirX int, dirY int, maxBursts int) int {
@@ -166,4 +146,27 @@ func parseGrid(lines []string) (map[string]cell,int,int) {
 		}
 	}
 	return grid ,maxY, maxX
+}
+
+
+func main() {
+	lines := util.ReadFileLines("inputs/day22.txt")
+	minY := 0
+	minX := 0
+
+	grid ,maxY, maxX:=  parseGrid(lines)
+
+	currentX := (maxX - minX)/2
+	currentY := (maxY - minY)/2
+	dirX := 0
+	dirY := -1
+	maxBursts := 10000
+
+	numberInfected := part1(grid, currentX, currentY, dirX, dirY, maxBursts)
+	fmt.Println("Part 1: ", numberInfected)
+
+
+	maxBursts = 10000000
+	numberInfected = part2(grid, currentX, currentY, dirX, dirY, maxBursts)
+	fmt.Println("Part 2: ", numberInfected)
 }
