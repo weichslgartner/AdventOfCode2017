@@ -111,33 +111,6 @@ func isNumber(s string) bool {
 	return len(strNumbers) == 1
 }
 
-func main() {
-	lines := util.ReadFileLines("inputs/day23.txt")
-	program := parseProgram(lines)
-	registers := make(map[string]int)
-	for _, char := range "abcdefgh" {
-		registers[string(char)] = 0
-	}
-
-	numbermul := interpret(program, registers)
-	findBlocks(program)
-
-	lines = util.ReadFileLines("inputs/day23.txt")
-	program = parseProgram(lines)
-	for _, char := range "abcdefgh" {
-		registers[string(char)] = 0
-	}
-	//convertToGo(program,registers)
-	fmt.Println("Part 1:", numbermul)
-	optimized()
-	registers["a"] = 1
-	//
-	//interpret(program,registers)
-	//fmt.Println(registers["h"])
-	////convertToC(program,registers)
-
-}
-
 func convertToGo(program []Instruction, registers map[string]int) {
 	instructionPointer := 0
 	for key, value := range registers {
@@ -357,4 +330,31 @@ label30:
 	}
 label2147483647:
 	fmt.Printf("Part 2: %v", h)
+}
+
+func main() {
+	lines := util.ReadFileLines("inputs/day23.txt")
+	program := parseProgram(lines)
+	registers := make(map[string]int)
+	for _, char := range "abcdefgh" {
+		registers[string(char)] = 0
+	}
+
+	numbermul := interpret(program, registers)
+	findBlocks(program)
+
+	lines = util.ReadFileLines("inputs/day23.txt")
+	program = parseProgram(lines)
+	for _, char := range "abcdefgh" {
+		registers[string(char)] = 0
+	}
+	//convertToGo(program,registers)
+	fmt.Println("Part 1:", numbermul)
+	optimized()
+	registers["a"] = 1
+	//
+	//interpret(program,registers)
+	//fmt.Println(registers["h"])
+	////convertToC(program,registers)
+
 }

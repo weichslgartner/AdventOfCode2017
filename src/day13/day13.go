@@ -7,22 +7,19 @@ import (
 
 //const LENGTH = 91
 
-type Wall struct{
-	depth int
-	wallRange int
+type Wall struct {
+	depth      int
+	wallRange  int
 	currentPos int
 	currentDir int
-
 }
 
-
-
 func getWalls(lines []string) []Wall {
-	walls := make([]Wall, 0,10000)
+	walls := make([]Wall, 0, 10000)
 	for _, line := range lines {
 		numbers := util.ExtractAllNumbers(line)
 		depth := numbers[0]
-		if depth >= len(walls){
+		if depth >= len(walls) {
 			walls = walls[0:depth+1]
 		}
 		walls[depth] = Wall{depth, numbers[1], 0, 1}
@@ -30,13 +27,11 @@ func getWalls(lines []string) []Wall {
 	return walls
 }
 
+func getHit(walls []Wall, delay int) bool {
+	newWalls := make([]Wall, len(walls))
+	copy(newWalls, walls)
 
-
-func getHit(walls []Wall,delay int) bool {
-	newWalls := make([]Wall,len(walls))
-	copy(newWalls,walls)
-
-	updatePositions(newWalls,delay)
+	updatePositions(newWalls, delay)
 	//fmt.Println(delay, newWalls)
 	for i := 0; i < len(walls); i++ {
 		currentWall := newWalls[i]
@@ -52,14 +47,12 @@ func getHit(walls []Wall,delay int) bool {
 	return false
 }
 
-
-
-
-func updatePositions(walls []Wall, delay int){
-	for i,wall := range walls{
-		if wall.wallRange > 0{
-			iDelay := delay % (wall.wallRange*2-2)
-			for j:=0; j < iDelay; j++{
+func updatePositions(walls []Wall, delay int) {
+	for i, wall := range walls {
+		if wall.wallRange > 0 {
+			//reduces delay to delay inside the cycle
+			iDelay := delay % (wall.wallRange*2 - 2)
+			for j := 0; j < iDelay; j++ {
 				wall = updateSingleWall(wall)
 			}
 			walls[i] = wall
@@ -68,15 +61,16 @@ func updatePositions(walls []Wall, delay int){
 
 	}
 }
+
 func updatePositionsOneStep(walls []Wall) {
-	for i,wall := range walls{
-		if wall.wallRange > 0{
-			walls[i]= updateSingleWall(wall)
+	for i, wall := range walls {
+		if wall.wallRange > 0 {
+			walls[i] = updateSingleWall(wall)
 		}
 
 	}
 }
-func updateSingleWall(wall Wall) Wall  {
+func updateSingleWall(wall Wall) Wall {
 	if wall.currentPos+wall.currentDir > wall.wallRange-1 {
 		wall.currentDir = -1
 	} else if wall.currentPos+wall.currentDir < 0 {
@@ -95,11 +89,10 @@ func part1(walls []Wall) {
 				severity += currentWall.depth * currentWall.wallRange
 			}
 		}
-
 		updatePositionsOneStep(walls)
 		//fmt.Println(walls)
 	}
-	fmt.Println("Part 1:",severity)
+	fmt.Println("Part 1:", severity)
 }
 
 func part2(walls []Wall) {
@@ -107,9 +100,8 @@ func part2(walls []Wall) {
 	for getHit(walls, delay) {
 		delay++
 	}
-	fmt.Println("Part 2:",delay)
+	fmt.Println("Part 2:", delay)
 }
-
 
 func main() {
 	lines := util.ReadFileLines("inputs/day13.txt")

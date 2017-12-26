@@ -18,11 +18,13 @@ func main() {
 	resultMap := make(map[string]int)
 	//programList := generateProgramList(programs)
 	i:=0
-	iterations := 100
+	iterations := 1000
 	cycledetection := true
 	for ; i <iterations;{
 
-
+		//tries to find patterns in the instructions which do not alter the input
+		//currently broken;
+		//use
 		if (optimize){
 			commands = doTheDance(commands, &programs,false)
 			if(i==2){
@@ -30,7 +32,6 @@ func main() {
 				w := bufio.NewWriter(f)
 				w.WriteString(strings.Join(commands, ","))
 				w.Flush()
-
 			}
 		}else{
 			doTheDance(commands, &programs,false)
@@ -49,7 +50,6 @@ func main() {
 			resultMap[programs] = i
 			i+=1
 		}
-
 
 		if(i%1000 == 0){
 			fmt.Printf("i: %v, length: %v \n", i, len(resultMap))

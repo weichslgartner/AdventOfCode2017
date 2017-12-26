@@ -10,31 +10,25 @@ import (
 const RIGHT = 1
 const LEFT = -1
 
-type instruction struct{
-	write int
-	dir int
+type instruction struct {
+	write     int
+	dir       int
 	nextState string
 }
 
-
-func generateKey(state string, value int) string{
-	return state+strconv.Itoa(value)
+func generateKey(state string, value int) string {
+	return state + strconv.Itoa(value)
 }
 
-
-
-func countOnes(machine map[int]int)int{
-	numberOnes :=0
-	for _, element := range machine{
-		numberOnes +=element
+func countOnes(machine map[int]int) int {
+	numberOnes := 0
+	for _, element := range machine {
+		numberOnes += element
 	}
 	return numberOnes
 }
 
-
-
-
-func parseInstructions (lines []string) (string, int, map[string]instruction) {
+func parseInstructions(lines []string) (string, int, map[string]instruction) {
 	var startState string
 	var checkSumSteps int
 	var currentState string
@@ -97,11 +91,10 @@ func parseInstructions (lines []string) (string, int, map[string]instruction) {
 	return startState, checkSumSteps, instructionMap
 }
 
-
 func main() {
 	lines := util.ReadFileLines("inputs/day25.txt")
-	startState, checkSumSteps, instructionMap := parseInstructions (lines)
-	fmt.Printf("Start state %v, checksum after %v\n",startState, checkSumSteps)
+	startState, checkSumSteps, instructionMap := parseInstructions(lines)
+	fmt.Printf("Start state %v, checksum after %v\n", startState, checkSumSteps)
 	//fmt.Println(instructionMap)
 	currentPosition := 0
 	currentState := startState
@@ -116,5 +109,5 @@ func main() {
 		currentPosition += inst.dir
 	}
 	ones := countOnes(machineMap)
-	fmt.Printf("Number ones after %v steps: %v",checkSumSteps,ones)
+	fmt.Printf("Number ones after %v steps: %v", checkSumSteps, ones)
 }

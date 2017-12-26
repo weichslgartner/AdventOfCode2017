@@ -12,7 +12,7 @@ func findTarget(buffer []int, targetNumber int) int{
 			return buffer[(i+1)%len(buffer)]
 		}
 	}
-	fmt.Errorf("Number not found! Panic!11")
+	fmt.Errorf("number not found! Panic!11")
 	return -1
 }
 

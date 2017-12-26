@@ -6,25 +6,23 @@ import (
 	"math"
 )
 
-type coord struct{
+type coord struct {
 	x int
 	y int
 	z int
 }
 
-type particle struct{
-	position coord
-	velocity coord
+type particle struct {
+	position     coord
+	velocity     coord
 	acceleration coord
-	index int
-	collide bool
+	index        int
+	collide      bool
 }
 
-func manhattanDistance(pos coord) int{
-	return util.Abs(pos.x) +util.Abs(pos.y)+util.Abs(pos.z)
+func manhattanDistance(pos coord) int {
+	return util.Abs(pos.x) + util.Abs(pos.y) + util.Abs(pos.z)
 }
-
-
 
 func simulate(particleList []particle, particleMap map[int]int, part1 bool) particle {
 	destroyed := 0
@@ -73,9 +71,7 @@ func simulate(particleList []particle, particleMap map[int]int, part1 bool) part
 	}
 	return nearestParticle
 
-
 }
-
 
 func destroy(part particle, particleList []particle, firstOccurence int, destroyed int, i int) int {
 	part.collide = true
@@ -93,45 +89,44 @@ func destroy(part particle, particleList []particle, firstOccurence int, destroy
 	return destroyed
 }
 
-
-func findLowestAcceleration(particles []particle) particle{
+func findLowestAcceleration(particles []particle) particle {
 	lowestAcc := math.MaxInt32
 	var lowestAccPart particle
-	for _,part := range particles{
+	for _, part := range particles {
 		accAbs := manhattanDistance(part.acceleration)
-		if  accAbs < lowestAcc{
-			lowestAccPart =part
+		if accAbs < lowestAcc {
+			lowestAccPart = part
 			lowestAcc = accAbs
 		}
 	}
 	return lowestAccPart
 }
 
-func parseLines(lines []string) (map[int]int,[]particle) {
+func parseLines(lines []string) (map[int]int, []particle) {
 	particleMap := make(map[int]int)
-	particleList := make([]particle,len(lines))
-	for i,line := range lines{
+	particleList := make([]particle, len(lines))
+	for i, line := range lines {
 		numbers := util.ExtractAllNumbers(line)
 		if len(numbers) != 9 {
-			fmt.Printf("Error line %v",i)
+			fmt.Printf("Error line %v", i)
 			panic("can't parse line")
 		}
-		pos := coord{numbers[0],numbers[1],numbers[2]}
-		vel := coord{numbers[3],numbers[4],numbers[5]}
-		acc := coord{numbers[6],numbers[7],numbers[8]}
-		part := particle{pos,vel,acc,i,false}
+		pos := coord{numbers[0], numbers[1], numbers[2]}
+		vel := coord{numbers[3], numbers[4], numbers[5]}
+		acc := coord{numbers[6], numbers[7], numbers[8]}
+		part := particle{pos, vel, acc, i, false}
 		particleMap[i] = manhattanDistance(pos)
 		particleList[i] = part
 
 	}
-	return particleMap,particleList
+	return particleMap, particleList
 }
 
 func main() {
 	lines := util.ReadFileLines("inputs/day20.txt")
-	particleMap,particleList := parseLines(lines)
-	//works for my input. for inputs with various particles with lower speed woudlnt work
-	fmt.Println("Part 1",findLowestAcceleration(particleList))
+	particleMap, particleList := parseLines(lines)
+	//works for my input. for inputs with various particles with lower speed wouldn't work
+	fmt.Println("Part 1", findLowestAcceleration(particleList))
 
 	nearestParticle := simulate(particleList, particleMap, false)
 	fmt.Println(nearestParticle)

@@ -11,7 +11,6 @@ const OCCUPIED = -1
 const WIDTH = 128
 const HEIGHT = 128
 
-
 var diskArray [][]int
 
 func toOccupiedFree(array []int) []int {
@@ -36,7 +35,6 @@ func printGrid() {
 			} else {
 				fmt.Print(".")
 			}
-
 		}
 		fmt.Println()
 	}
@@ -61,9 +59,7 @@ func findRegions() int {
 				searchRegion(i, j, numberRegions)
 				numberRegions++
 			}
-
 		}
-
 	}
 	//fmt.Println(numberRegions-1)
 	return numberRegions - 1

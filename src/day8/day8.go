@@ -8,7 +8,6 @@ import (
 	"math"
 )
 
-
 type Condition struct {
 	operandLeft  string
 	operandRight int
@@ -24,7 +23,7 @@ type Instruction struct {
 func parseInstructionsAndEvaluate(lines []string) (map[string]int, int) {
 	registerMap := make(map[string]int, 0)
 	re, _ := regexp.Compile(`(\w+)\s+(\w+)\s(-*[0-9]+) if (\w+)\s+([><=!]+)\s+(-*[0-9]+)`)
-	highestValue :=math.MinInt32
+	highestValue := math.MinInt32
 	for _, line := range lines {
 		condition, instruction := parseLine(re, line, registerMap)
 		highestValue = eval(registerMap, instruction, condition, highestValue)
@@ -34,6 +33,7 @@ func parseInstructionsAndEvaluate(lines []string) (map[string]int, int) {
 	//fmt.Println(registerMap)
 	return registerMap, highestValue
 }
+
 func parseLine(re *regexp.Regexp, line string, registerMap map[string]int) (Condition, Instruction) {
 	result := re.FindStringSubmatch(line)
 	rightOperandCondition, _ := strconv.Atoi(result[6])
@@ -47,8 +47,7 @@ func parseLine(re *regexp.Regexp, line string, registerMap map[string]int) (Cond
 	return condition, instruction
 }
 
-
-func eval(registers map[string]int, instruction Instruction, condition Condition, highestValue int) int{
+func eval(registers map[string]int, instruction Instruction, condition Condition, highestValue int) int {
 	leftSide := registers[condition.operandLeft]
 	rightSide := condition.operandRight
 	conditionResult := false
@@ -69,8 +68,8 @@ func eval(registers map[string]int, instruction Instruction, condition Condition
 		fmt.Println("Unknown Condition")
 	}
 	if (conditionResult) {
-		currentRegister :=registers[instruction.register]
-		switch instruction.inst{
+		currentRegister := registers[instruction.register]
+		switch instruction.inst {
 		case "inc":
 			currentRegister += instruction.value
 		case "dec":
@@ -79,7 +78,7 @@ func eval(registers map[string]int, instruction Instruction, condition Condition
 			fmt.Println("Unknown instruction")
 		}
 		registers[instruction.register] = currentRegister
-		if currentRegister > highestValue{
+		if currentRegister > highestValue {
 			highestValue = currentRegister
 		}
 	}
@@ -90,12 +89,12 @@ func eval(registers map[string]int, instruction Instruction, condition Condition
 func main() {
 	lines := util.ReadFileLines("inputs/day8.txt")
 	registers, highestValue := parseInstructionsAndEvaluate(lines)
-	maxValue :=math.MinInt32
-	for _, value := range registers{
-		if value > maxValue{
+	maxValue := math.MinInt32
+	for _, value := range registers {
+		if value > maxValue {
 			maxValue = value
 		}
 	}
-	fmt.Println("Largest register value in the end: ",maxValue)
-	fmt.Println("Highest value during evaluation: ",highestValue)
+	fmt.Println("Largest register value in the end: ", maxValue)
+	fmt.Println("Highest value during evaluation: ", highestValue)
 }

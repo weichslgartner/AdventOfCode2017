@@ -4,7 +4,6 @@ import (
 	"strconv"
 	"util"
 	"fmt"
-
 )
 
 const INFECTED = "I"
@@ -12,34 +11,28 @@ const CLEAN = "C"
 const WEAKENED = "W"
 const FLAGGED = "F"
 
-
-
-type cell struct{
-	x int
-	y int
+type cell struct {
+	x        int
+	y        int
 	infected string
 }
 
-func coord2String(x int, y int) string{
-	return strconv.Itoa(x) + "," +strconv.Itoa(y)
+func coord2String(x int, y int) string {
+	return strconv.Itoa(x) + "," + strconv.Itoa(y)
 }
 
-func cell2String(c cell) string{
-	return coord2String(c.x, c.y )
+func cell2String(c cell) string {
+	return coord2String(c.x, c.y)
 }
-
-
-
-
 
 func part1(grid map[string]cell, currentX int, currentY int, dirX int, dirY int, maxBursts int) int {
-	numberInfected :=0
+	numberInfected := 0
 	for bursts := 0; bursts < maxBursts; bursts++ {
 		element, exists := grid[coord2String(currentX, currentY)]
 		if !exists {
 			element = cell{currentX, currentY, CLEAN}
 		}
-		if element.infected == INFECTED{
+		if element.infected == INFECTED {
 			dirX, dirY = turnRight(dirX, dirY)
 			element.infected = CLEAN
 		} else {
@@ -55,16 +48,15 @@ func part1(grid map[string]cell, currentX int, currentY int, dirX int, dirY int,
 	return numberInfected
 }
 
-
-func part2(grid map[string]cell, currentX int, currentY int, dirX int, dirY int,  maxBursts int) int {
-	numberInfected :=0
+func part2(grid map[string]cell, currentX int, currentY int, dirX int, dirY int, maxBursts int) int {
+	numberInfected := 0
 	for bursts := 0; bursts < maxBursts; bursts++ {
 		element, exists := grid[coord2String(currentX, currentY)]
 		if !exists {
 			element = cell{currentX, currentY, CLEAN}
 		}
 
-		switch element.infected{
+		switch element.infected {
 		case INFECTED:
 			dirX, dirY = turnRight(dirX, dirY)
 			element.infected = FLAGGED
@@ -89,42 +81,39 @@ func part2(grid map[string]cell, currentX int, currentY int, dirX int, dirY int,
 	return numberInfected
 }
 
-
 func reverse(x int, y int) (int, int) {
-	return -1*x,-1*y
+	return -1 * x, -1 * y
 }
 
 func turnRight(x int, y int) (int, int) {
 	if x == 0 && y == 1 {
-		return -1,0
-	}else if x == 0 && y == -1 {
-		return 1,0
-	}else if x == -1 && y == 0 {
-		return 0,-1
-	}else if x == 1 && y == 0 {
-		return 0,1
+		return -1, 0
+	} else if x == 0 && y == -1 {
+		return 1, 0
+	} else if x == -1 && y == 0 {
+		return 0, -1
+	} else if x == 1 && y == 0 {
+		return 0, 1
 	}
 	fmt.Errorf("not defined direction")
-	return 0,0
+	return 0, 0
 }
-
 
 func turnLeft(x int, y int) (int, int) {
 	if x == 0 && y == 1 {
-		return 1,0
-	}else if x == 0 && y == -1 {
-		return -1,0
-	}else if x == -1 && y == 0 {
-		return 0,1
-	}else if x == 1 && y == 0 {
-		return 0,-1
+		return 1, 0
+	} else if x == 0 && y == -1 {
+		return -1, 0
+	} else if x == -1 && y == 0 {
+		return 0, 1
+	} else if x == 1 && y == 0 {
+		return 0, -1
 	}
 	fmt.Errorf("not defined direction")
-	return 0,0
+	return 0, 0
 }
 
-
-func parseGrid(lines []string) (map[string]cell,int,int) {
+func parseGrid(lines []string) (map[string]cell, int, int) {
 	maxY := 0
 	maxX := 0
 	grid := make(map[string]cell)
@@ -145,26 +134,24 @@ func parseGrid(lines []string) (map[string]cell,int,int) {
 
 		}
 	}
-	return grid ,maxY, maxX
+	return grid, maxY, maxX
 }
-
 
 func main() {
 	lines := util.ReadFileLines("inputs/day22.txt")
 	minY := 0
 	minX := 0
 
-	grid ,maxY, maxX:=  parseGrid(lines)
+	grid, maxY, maxX := parseGrid(lines)
 
-	currentX := (maxX - minX)/2
-	currentY := (maxY - minY)/2
+	currentX := (maxX - minX) / 2
+	currentY := (maxY - minY) / 2
 	dirX := 0
 	dirY := -1
 	maxBursts := 10000
 
 	numberInfected := part1(grid, currentX, currentY, dirX, dirY, maxBursts)
 	fmt.Println("Part 1: ", numberInfected)
-
 
 	maxBursts = 10000000
 	numberInfected = part2(grid, currentX, currentY, dirX, dirY, maxBursts)

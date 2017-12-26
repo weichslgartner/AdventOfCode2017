@@ -24,54 +24,17 @@ const (
 var concurrent bool = false
 
 type Pattern [][]bool
+
 var waitGroup sync.WaitGroup
 
-func main() {
-	lines := util.ReadFileLines("inputs/day21.txt")
-	patternMap := parsePatternMap(lines)
-	patternMapWithRotations := make(map[string]Pattern)
-	iterations := 18
-	transformToPatternMapWithRotations(patternMap, patternMapWithRotations)
-	currentPattern := line2Pattern([]string{".#.", "..#", "###"})
-	for i := 1; i <= iterations; i++ {
-		start := time.Now()
-		stepSize, newPattern := determineStepAndInitNewPattern(currentPattern)
-		innerY := 0
-
-		for y := 0; y < len(currentPattern); y += stepSize {
-			innerX := 0
-			for x := 0; x < len(currentPattern); x += stepSize {
-				if concurrent{
-					waitGroup.Add(1)
-					go cutAndMatch(currentPattern, y, x, stepSize, &newPattern, patternMapWithRotations, innerY, innerX)
-				}else{
-					cutAndMatch(currentPattern, y, x, stepSize, &newPattern, patternMapWithRotations, innerY, innerX)
-				}
-
-				innerX += stepSize + 1
-			}
-			innerY += stepSize + 1
-		}
-		if concurrent{
-			waitGroup.Wait()
-		}
-
-		currentPattern = newPattern
-		elapsed := time.Since(start)
-		fmt.Printf("Iteration: %v, pixels on: %v  length grid %v; time %v\n", i, numberOn(currentPattern), len(currentPattern), elapsed)
-
-	}
-	fmt.Printf("Iteration: %v, pixels on: %v \n", iterations, numberOn(currentPattern))
-}
-func cutAndMatch(currentPattern Pattern, y int, x int, stepSize int, newPattern *Pattern, patternMapWithRotations map[string]Pattern, innerY int, innerX int)  {
+func cutAndMatch(currentPattern Pattern, y int, x int, stepSize int, newPattern *Pattern, patternMapWithRotations map[string]Pattern, innerY int, innerX int) {
 	subPattern := cutOutPattern(currentPattern, y, x, stepSize)
 	matchPattern(patternMapWithRotations, stepSize, subPattern, newPattern, innerY, innerX)
-	if concurrent{
+	if concurrent {
 		waitGroup.Done()
 	}
 
 }
-
 
 func determineStepAndInitNewPattern(currentPattern Pattern, ) (int, Pattern) {
 	var stepSize int
@@ -92,7 +55,6 @@ func determineStepAndInitNewPattern(currentPattern Pattern, ) (int, Pattern) {
 	return stepSize, newPattern
 }
 
-
 func matchPattern(patternMapWithRotations map[string]Pattern, stepSize int, subPattern Pattern, newPattern *Pattern, innerY int, innerX int) {
 	for in, out := range patternMapWithRotations {
 		inNew := string2Pattern(in)
@@ -108,8 +70,6 @@ func matchPattern(patternMapWithRotations map[string]Pattern, stepSize int, subP
 
 }
 
-
-
 func transformToPatternMapWithRotations(patternMap map[string]Pattern, patternMapWithRotations map[string]Pattern) {
 	for in, out := range patternMap {
 		inNew := string2Pattern(in)
@@ -119,20 +79,20 @@ func transformToPatternMapWithRotations(patternMap map[string]Pattern, patternMa
 			rot_input[i] = make([]bool, len(inNew))
 		}
 		for rot := _0; rot <= _270FLIPX; rot++ {
-
 			copyIntoPattern(&rot_input, inNew, 0, 0, len(inNew))
 			outpattern := rotate(rot_input, rot)
 			patternMapWithRotations[pattern2String(outpattern)] = out
 		}
 	}
 }
-func copyIntoPattern(new *Pattern, src Pattern, y int, x int, step int)  {
+func copyIntoPattern(new *Pattern, src Pattern, y int, x int, step int) {
 	for i := 0; i < step; i++ {
 		for j := 0; j < step; j++ {
 			(*new)[i+y][j+x] = src[i][j]
 		}
 	}
 }
+
 func rotate(pattern Pattern, rot int) Pattern {
 	before := numberOn(pattern)
 	switch rot {
@@ -210,7 +170,6 @@ func cutOutPattern(pattern Pattern, y int, x int, step int) Pattern {
 }
 
 func match(subPattern Pattern, inPattern Pattern) bool {
-
 	if len(subPattern) != len(inPattern) {
 		return false
 	}
@@ -228,7 +187,7 @@ func numberOn(pattern Pattern) int {
 	numberOn := 0
 	for _, line := range pattern {
 		for _, element := range line {
-			if element{
+			if element {
 				numberOn++
 			}
 		}
@@ -238,15 +197,13 @@ func numberOn(pattern Pattern) int {
 
 func printPattern(pattern Pattern) {
 	for _, line := range pattern {
-		for _, element := range line{
+		for _, element := range line {
 			if element {
 				fmt.Println("#")
-			}else{
+			} else {
 				fmt.Println(".")
 			}
 		}
-
-
 	}
 	fmt.Println()
 }
@@ -285,15 +242,14 @@ func string2Pattern(s string) Pattern {
 
 func line2Pattern(p_lines []string) Pattern {
 	pattern := make([][]bool, len(p_lines[0]))
-	for i,_ := range pattern{
+	for i, _ := range pattern {
 		pattern[i] = make([]bool, len(p_lines[0]))
 	}
 	for y, p_line := range p_lines {
-		chars :=  strings.Split(p_line, "")
-		for x, char := range chars{
+		chars := strings.Split(p_line, "")
+		for x, char := range chars {
 			pattern[y][x] = string(char) == "#"
 		}
-
 	}
 	return pattern
 }
@@ -301,15 +257,50 @@ func line2Pattern(p_lines []string) Pattern {
 func pattern2String(pattern Pattern) string {
 	result := ""
 	for _, line := range pattern {
-		for _, element := range line{
-			if element{
+		for _, element := range line {
+			if element {
 				result += "#"
-			}else{
+			} else {
 				result += "."
 			}
-
 		}
-
 	}
 	return result
+}
+
+func main() {
+	lines := util.ReadFileLines("inputs/day21.txt")
+	patternMap := parsePatternMap(lines)
+	patternMapWithRotations := make(map[string]Pattern)
+	iterations := 18
+	transformToPatternMapWithRotations(patternMap, patternMapWithRotations)
+	currentPattern := line2Pattern([]string{".#.", "..#", "###"})
+	for i := 1; i <= iterations; i++ {
+		start := time.Now()
+		stepSize, newPattern := determineStepAndInitNewPattern(currentPattern)
+		innerY := 0
+
+		for y := 0; y < len(currentPattern); y += stepSize {
+			innerX := 0
+			for x := 0; x < len(currentPattern); x += stepSize {
+				if concurrent {
+					waitGroup.Add(1)
+					go cutAndMatch(currentPattern, y, x, stepSize, &newPattern, patternMapWithRotations, innerY, innerX)
+				} else {
+					cutAndMatch(currentPattern, y, x, stepSize, &newPattern, patternMapWithRotations, innerY, innerX)
+				}
+
+				innerX += stepSize + 1
+			}
+			innerY += stepSize + 1
+		}
+		if concurrent {
+			waitGroup.Wait()
+		}
+
+		currentPattern = newPattern
+		elapsed := time.Since(start)
+		fmt.Printf("Iteration: %v, pixels on: %v  length grid %v; time %v\n", i, numberOn(currentPattern), len(currentPattern), elapsed)
+	}
+	fmt.Printf("Iteration: %v, pixels on: %v \n", iterations, numberOn(currentPattern))
 }

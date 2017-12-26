@@ -44,20 +44,17 @@ func compareBitStreams(valueA int, valueB int, numberBits int) bool{
 	bitsA := truncateLowerBits(strconv.FormatInt(int64(valueA), 2),16)
 	bitsB := truncateLowerBits(strconv.FormatInt(int64(valueB), 2),16)
 	match := true
-
 	for i:=0; i<numberBits; i++{
 		if bitsA[i] != bitsB[i]{
 			match = false
 			break
 		}
 	}
-
 	return match
 }
 
 
 func part(generatorA Generator,generatorB Generator, iterations int) {
-
 	numberMatches := 0
 	for i := 0; i < iterations; i++ {
 		a, b := generatorA.getNextValue2(), generatorB.getNextValue2()
@@ -65,7 +62,6 @@ func part(generatorA Generator,generatorB Generator, iterations int) {
 		if compareBitStreams(a, b, 16) {
 			numberMatches++
 		}
-
 	}
 	fmt.Println(numberMatches)
 }
@@ -75,7 +71,6 @@ func main() {
 	generatorA := Generator{883, 16807, 2147483647, 1}
 	generatorB := Generator{879, 48271, 2147483647, 1}
 	part(generatorA,generatorB,40e6)
-
 	//generatorA = Generator{65, 16807, 2147483647, 4}
 	//generatorB = Generator{8921, 48271, 2147483647, 8}
 	generatorA = Generator{883, 16807, 2147483647, 4}

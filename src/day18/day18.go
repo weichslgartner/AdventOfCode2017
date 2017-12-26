@@ -31,7 +31,7 @@ func parseProgram(lines []string) []Instruction {
 	return program
 }
 
-func interpret(program []Instruction, registers map[string]int, part1 bool, id int, queue1 chan int, queue2 chan int) {
+func interpret(program []Instruction, registers map[string]int, part1 bool, id int, queue0 chan int, queue1 chan int) {
 	instructionPointer := 0
 	lastSound := 0
 	numberSend := 0
@@ -39,7 +39,6 @@ func interpret(program []Instruction, registers map[string]int, part1 bool, id i
 		registers["p"] = id
 		fmt.Printf("Program %v starting\n", id)
 	}
-
 	for instructionPointer < len(program) {
 		currentInstruction := program[instructionPointer]
 		switch currentInstruction.name {
@@ -61,10 +60,10 @@ func interpret(program []Instruction, registers map[string]int, part1 bool, id i
 				lastSound = registers[currentInstruction.op1]
 			} else {
 				if id == 0 {
-					queue1 <- getValue(currentInstruction.op1, registers)
+					queue0 <- getValue(currentInstruction.op1, registers)
 
 				} else {
-					queue2 <- getValue(currentInstruction.op1, registers)
+					queue1 <- getValue(currentInstruction.op1, registers)
 				}
 				//fmt.Printf("Program %v send %v\n", id, getValue(currentInstruction.op1,registers))
 				numberSend++
@@ -79,10 +78,9 @@ func interpret(program []Instruction, registers map[string]int, part1 bool, id i
 				var receive int
 				var timeout bool
 				if id == 0 {
-					receive, timeout = getFromChannelWithTimout(queue2)
+					receive, timeout = getFromChannelWithTimeOut(queue1)
 				} else if id == 1 {
-					receive, timeout = getFromChannelWithTimout(queue1)
-
+					receive, timeout = getFromChannelWithTimeOut(queue0)
 				} else {
 					fmt.Println("Unknown ID")
 				}
@@ -112,19 +110,13 @@ func interpret(program []Instruction, registers map[string]int, part1 bool, id i
 	waitGroup.Done()
 }
 
-func getFromChannelWithTimout(channel chan int) (int, bool) {
+func getFromChannelWithTimeOut(channel chan int) (int, bool) {
 	var receive int
-	timeout := make(chan bool, 1)
-	go func() {
-		time.Sleep(1 * time.Second)
-		timeout <- true
-	}()
 	select {
 	case receive = <-channel:
 		return receive, false
-	case <-timeout:
+	case <-time.After(time.Second):
 		fmt.Println("Timeout")
-
 		return receive, true
 	}
 
@@ -150,15 +142,14 @@ func main() {
 	program := parseProgram(lines)
 	registers := make(map[string]int)
 	interpret(program,registers,true,0,nil, nil)
+	queue0 := make(chan int, 100)
 	queue1 := make(chan int, 100)
-	queue2 := make(chan int, 100)
+	registers0 := make(map[string]int)
 	registers1 := make(map[string]int)
-	registers2 := make(map[string]int)
+	//execute the two programs in parallel and wait for the deadlock
 	waitGroup.Add(1)
-	go interpret(program, registers1, false, 0, queue1, queue2)
+	go interpret(program, registers0, false, 0, queue0, queue1)
 	waitGroup.Add(1)
-	go interpret(program, registers2, false, 1, queue1, queue2)
-
+	go interpret(program, registers1, false, 1, queue0, queue1)
 	waitGroup.Wait()
-	//time.Sleep(50* time.Second)
 }

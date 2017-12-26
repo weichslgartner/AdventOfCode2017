@@ -5,57 +5,51 @@ import (
 	"fmt"
 )
 
-func getScore(input string) (int,int) {
-	score :=0
+func getScore(input string) (int, int) {
+	score := 0
 	isGarbage := false
 	groupsOpen := 0
-	canceledCharacters :=0
+	canceledCharacters := 0
 	currentCharPos := 0
-	for currentCharPos < len(input){
+	for currentCharPos < len(input) {
 		currentChar := string(input[currentCharPos])
 		switch currentChar {
 		case "!":
-			currentCharPos+=2
+			currentCharPos ++ //ignores the next character
 		case "<":
-			if isGarbage{
+			if isGarbage {
 				canceledCharacters++
 			}
 			isGarbage = true
-			currentCharPos++
 		case ">":
 			isGarbage = false
-			currentCharPos++
 		case "{":
-			if !isGarbage{
+			if !isGarbage {
 				groupsOpen++
-			}else{
+			} else {
 				canceledCharacters++
 			}
-			currentCharPos++
 		case "}":
-			if !isGarbage{
+			if !isGarbage {
 				score += groupsOpen
 				groupsOpen--
-			}else{
+			} else {
 				canceledCharacters++
 			}
-			currentCharPos++
 		default:
-			if isGarbage{
+			if isGarbage {
 				canceledCharacters++
 			}
-			currentCharPos++
+
 		}
+		currentCharPos++
 	}
 	return score, canceledCharacters
 }
 
-
 func main() {
 	input := util.ReadFileToString("inputs/day9.txt")
 	score, canceledCharacters := getScore(input)
-	fmt.Println("Score: ",score)
-	fmt.Println("Canceled characters: ",canceledCharacters)
-
+	fmt.Println("Score: ", score)
+	fmt.Println("Canceled characters: ", canceledCharacters)
 }
-

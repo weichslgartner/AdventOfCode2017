@@ -23,8 +23,8 @@ func (c component) not(i int) int {
 const MAXRECURSIONS = 1000000
 
 var numberRecursions = 0
-var bestBridge  = 0
-var longestBridge  = 0
+var bestBridge = 0
+var longestBridge = 0
 var strengthLongestBridge = 0
 
 func removeFromList(comp component, componentList []component) []component {

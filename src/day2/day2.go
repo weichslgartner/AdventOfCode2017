@@ -15,10 +15,10 @@ func calcChecksum(lines []string) (int, int){
 		words := strings.Fields(line)
 		checksumPart1 +=checksumLine(words)
 		checksumPart2 +=checksumLine2(words)
-
 	}
 	return checksumPart1,checksumPart2
 }
+
 func checksumLine(words []string) int{
 	min := math.MaxInt32
 	max := math.MinInt32

@@ -35,8 +35,8 @@ func main() {
 	fileStr := util.ReadFileToString("inputs/day1.txt")
 
 	sum := sumIdenticalDigits(fileStr)
-	fmt.Printf("Part1 :%v\n", sum)
+	fmt.Printf("Part1: %v\n", sum)
 
 	sum = halfWay(fileStr)
-	fmt.Printf("Part2 :%v\n", sum)
+	fmt.Printf("Part2: %v\n", sum)
 }
